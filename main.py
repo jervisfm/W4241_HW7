@@ -144,11 +144,12 @@ def simulate(h, k, run_time):
 def do_all_plots(points, h, graph_rate):
     counter = 0
     graph_counter  = 1
+    print 'Graph Rate = %d' % graph_rate
     for x_pts in points:
         if counter % graph_rate == 0:
             print "Plotting graph # %d" % graph_counter
             fname = "graph%d.png" % graph_counter
-            plot_x_pts(x_pts, h, counter)
+            plot_x_pts(x_pts, h, fname)
             graph_counter += 1
         counter += 1
 
@@ -162,6 +163,8 @@ def do_main(h,k,run_time,graph_rate):
     print 'Simulating and Solving PDE System for duration of %s' % run_time
     print 'k (time-width) = %f' % h
     print 'h (x-width) = %f' % k
+    print 'Run Time = %f ' % run_time
+    print 'Graph rate = %f' % graph_rate
     pts_array = simulate(h,k,run_time)
     print "We did this many steps : %d " % len(pts_array)
     print "Plotting Results ..."
@@ -211,7 +214,7 @@ def main():
         h = sys.argv[1]
         k = sys.argv[2]
         total_time = sys.argv[3]
-        graph_rate = sys.argv[3]
+        graph_rate = sys.argv[4]
         if not valid_inputs(h,k,total_time,graph_rate):
             print 'Invalid Inputs detected'
             print '************************'
