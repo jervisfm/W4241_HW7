@@ -15,9 +15,8 @@ def f(x):
         return 0
 
 
-def u(x, k, h):
-    rho = (k/h)**2
-    return rho/2 * (f(x - h) + f(x + h)) +(1-rho) * f(x)
+def u(x, k, h, rho):
+    return rho/2 * (f(x - h) + f(x + h)) + (1 - rho) * f(x)
 
 def u_forward(x, t, k, h):
     """
@@ -28,7 +27,7 @@ def u_forward(x, t, k, h):
      h - the delta in x-pts (i.e. the x-spacing in use).
     """
     rho = (k/h)**2
-    #print "curr x = %f" %x
+    #print "INIT rho  = %f" %rho
     #print "------"
 
     tx = x-h
@@ -38,7 +37,7 @@ def u_forward(x, t, k, h):
         print "h = %f" % h
         print "t = %f" % t
 
-    return rho * (u(x - h, t) + u(x + h, t)) + 2 * (1 - rho) * u(x, t) - u(x, t - k)
+    return rho * (u(x - h, t, h, rho) + u(x + h, t, h, rho)) + 2 * (1 - rho) * u(x, t, h, rho) - u(x, t - k, h, rho)
 
 def print_x_pts(x_pts):
     size = len(x_pts)
@@ -49,19 +48,33 @@ def print_two_x_pts(x_pts, x_pts2):
     size = len(x_pts)
     for i in range(size):
         print "%d/%d %f | %f" % (i,size, x_pts[i], x_pts2[i])
-def get_initial_x_pts(h):
+def get_starting_x_pts(h, rho):
     """
         Gets the initial array of x-pts at time t=0
         h - x spacing being used.
+        rho - ratio of (h/k)^2
     """
     ans = []
     num_x_pts = int(ceil(1/ h))
-    print "Not integer : %f" %num_x_pts
-    for i in range(num_x_pts + 1): # Plus one so that we also get the very last end point
+    for i in xrange(num_x_pts + 1): # Plus one so that we also get the very last end point
         x = i * h
-        new_val = u(x,0)
+        new_val = u(x, 0, h, rho)
         ans.append(new_val)
     return ans
+
+def get_func_x_pts(h, rho):
+    """ Gets the points as represented by the function f(x)
+        h - x spacing being used
+    """
+    ans = []
+    num_x_pts = int(ceil(1/h))
+    for i in xrange(num_x_pts + 1): # Plus one so that we also get the very last end point on line
+        x = i * h
+        val = f(x)
+        ans.append(val)
+    return ans
+
+
 
 def move_x_pts_forward(x_pts, t, k, h):
     num_x_pts = len(x_pts)
@@ -69,9 +82,9 @@ def move_x_pts_forward(x_pts, t, k, h):
     for i in range(num_x_pts):
         # The First and Last Point are always
         # Fixed.
-        if i == 0  or i == num_x_pts - 1:
+        """if i == 0  or i == num_x_pts - 1:
             ans.append(0)
-            continue
+            continue"""
         curr_x = i * h
         new_x = u_forward(curr_x, t, k, h)
         ans.append(new_x)
@@ -89,16 +102,17 @@ def plot_x_pts(y_points, h, num):
     fig.suptitle('Visualizing X-Line', fontsize=14, fontweight='bold')
     plt.xlabel('X')
     plt.ylabel('U')
-    plt.ylim([0,1])
+    plt.ylim([0,0.5])
     plt.plot(x_points, y_points, 'ro')
     #plt.show()
     fig.savefig('graph%d.png' % num)
 
 def simulate(h, k, run_time, p):
-    rho = k * k / h * h
     num_steps_forward = int(ceil(run_time / k))
     pts_array = []
-    initial_x_pts = get_initial_x_pts(h)
+    rho = (h/k) ** 2
+    initial_x_pts = get_starting_x_pts(h, rho)
+
     pts_array.append(initial_x_pts)
 
     for i in range(num_steps_forward):
