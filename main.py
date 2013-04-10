@@ -76,7 +76,6 @@ def get_func_x_pts(h):
     return ans
 
 
-next_quit = 400
 def move_x_pts_forward(prev_x_pts, curr_x_pts, k, h):
     """
         Moves forward from the current line to the next one in time.
@@ -97,18 +96,12 @@ def move_x_pts_forward(prev_x_pts, curr_x_pts, k, h):
         #        u(x,t+k) = rho * [u(x+h,t) + u(x-h,t)] + 2(1-p)*u(x,t) - u(x,t-k)
 
         new_val = rho * (curr_x_pts[i+1] + curr_x_pts[i-1]) + 2*(1-rho)*curr_x_pts[i] - prev_x_pts[i]
+
+        # Testing has revealed that this formula is affected by rounding errors which make the result negative.
+        # For the parameters, we're working with (rho = 1; y-value = 0.5), this shouldn't be posssible. So we
+        # fix it by truncating to zero.
         if new_val < 0:
             new_val = 0
-        global next_quit
-        """if (new_val < 0):
-            print new_val
-            print_two_x_pts(prev_x_pts, curr_x_pts)
-            print '-----'
-            if (next_quit < 0):
-                exit(-1)
-            next_quit -= 1
-        """
-
         ans.append(new_val)
     return ans
 
