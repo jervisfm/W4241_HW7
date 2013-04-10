@@ -98,9 +98,9 @@ def move_x_pts_forward(prev_x_pts, curr_x_pts, k, h):
         ans.append(new_val)
     return ans
 
-def plot_x_pts(y_points, h, num):
+def plot_x_pts(y_points, h, fname):
     """
-        Plots the given Points and saves it to a file called 'graph.png' appended with the given 'num' value.
+        Plots the given Points and saves it to a file with given name.
     """
     size = len(y_points)
     x_points = []
@@ -112,9 +112,9 @@ def plot_x_pts(y_points, h, num):
     fig.suptitle('Visualizing String', fontsize=14, fontweight='bold')
     plt.xlabel('X - Space')
     plt.ylabel('U - Height/Magnitude')
-    plt.ylim([0,0.5])
+    #plt.ylim([0,0.5])
     plt.plot(x_points, y_points, 'ro')
-    fig.savefig('graph%d.png' % num)
+    fig.savefig('%s' % fname)
 
 def simulate(h, k, run_time):
     """
@@ -143,10 +143,13 @@ def simulate(h, k, run_time):
 
 def do_all_plots(points, h, graph_rate):
     counter = 0
+    graph_counter  = 1
     for x_pts in points:
         if counter % graph_rate == 0:
-            print "Plotting graph # %d" % counter
+            print "Plotting graph # %d" % graph_counter
+            fname = "graph%d.png" % graph_counter
             plot_x_pts(x_pts, h, counter)
+            graph_counter += 1
         counter += 1
 
 def do_main(h,k,run_time,graph_rate):
@@ -154,7 +157,7 @@ def do_main(h,k,run_time,graph_rate):
         h - x-width
         k - time-width
         run_time - duration of simulation
-        graph_rate - plot graph every "graph_rate" steps. 
+        graph_rate - plot graph every "graph_rate" steps.
     """
     print 'Simulating and Solving PDE System for duration of %s' % run_time
     print 'k (time-width) = %f' % h
