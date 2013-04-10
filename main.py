@@ -54,6 +54,10 @@ def move_x_pts_forward(x_pts, t, k, h):
     num_x_pts = len(x_pts)
     ans = []
     for i in range(num_x_pts):
+        # Skip the First and Last Point as the ends
+        # are fixed
+        if i == 0  or i == num_x_pts - 1:
+            continue
         curr_x = x_pts[i]
         new_x = u_forward(curr_x, t, k, h)
         ans.append(new_x)
