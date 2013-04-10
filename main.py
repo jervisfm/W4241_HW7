@@ -10,9 +10,13 @@ except ImportError:
 
 __author__ = 'Jervis Muindi'
 # Date: April 2013
-
+# Numerical Analysis and Algorithms
 
 def f(x):
+    """
+        This is the function describing the initial state of system.
+        You can change it something else (i.e. redefine it) if you'd like to solve a different problem.
+    """
     if 0 <= x <= 0.5:
         return x
     elif 0.5 <= x <= 1.0:
@@ -105,12 +109,11 @@ def plot_x_pts(y_points, h, num):
         x_points.append(val)
 
     fig = figure()
-    fig.suptitle('Visualizing X-Line', fontsize=14, fontweight='bold')
-    plt.xlabel('X')
-    plt.ylabel('U')
+    fig.suptitle('Visualizing String', fontsize=14, fontweight='bold')
+    plt.xlabel('X - Space')
+    plt.ylabel('U - Height/Magnitude')
     plt.ylim([0,0.5])
     plt.plot(x_points, y_points, 'ro')
-    #plt.show()
     fig.savefig('graph%d.png' % num)
 
 def simulate(h, k, run_time):
@@ -147,7 +150,7 @@ def do_all_plots(points, h, graph_rate):
         counter += 1
 
 def do_main(h,k,run_time,graph_rate):
-    pts_array = simulate(h,k,run_time,p)
+    pts_array = simulate(h,k,run_time,graph_rate)
     print "We have this many steps : %d " % len(pts_array)
     print_two_x_pts(pts_array[0], pts_array[0])
     print "We have this many steps : %d " % len(pts_array)
