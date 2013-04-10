@@ -150,11 +150,18 @@ def do_all_plots(points, h, graph_rate):
         counter += 1
 
 def do_main(h,k,run_time,graph_rate):
+    """
+        h - x-width
+        k - time-width
+        run_time - duration of simulation
+        graph_rate - plot graph every "graph_rate" steps. 
+    """
+    print 'Simulating and Solving PDE System for duration of %s' % run_time
+    print 'k (time-width) = %f' % h
+    print 'h (x-width) = %f' % k
     pts_array = simulate(h,k,run_time)
-    print "We have this many steps : %d " % len(pts_array)
-    print_two_x_pts(pts_array[0], pts_array[0])
-    print "We have this many steps : %d " % len(pts_array)
-    print "plotting..."
+    print "We did this many steps : %d " % len(pts_array)
+    print "Plotting Results ..."
     do_all_plots(pts_array, h, graph_rate)
     print "All plots done"
 
