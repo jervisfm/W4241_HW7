@@ -47,7 +47,7 @@ def print_x_pts(x_pts):
 def print_two_x_pts(x_pts, x_pts2):
     size = len(x_pts)
     print "x_pts = %d | %d" %(len(x_pts), len(x_pts2))
-    exit(0)
+
     for i in range(size):
         print "%d/%d %f | %f" % (i,size, x_pts[i], x_pts2[i])
 def get_starting_x_pts(h, rho):
@@ -149,6 +149,7 @@ def test():
 
 def main():
     test()
+
 
 
 if __name__ == '__main__':
