@@ -22,7 +22,7 @@ def f(x):
     elif 0.5 <= x <= 1.0:
         return 1 - x
     else:
-        print "Error: undefined input %f" % x
+        # print "Warning: undefined input %f" % x
         return 0
 
 
