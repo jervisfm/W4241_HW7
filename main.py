@@ -46,6 +46,8 @@ def print_x_pts(x_pts):
 
 def print_two_x_pts(x_pts, x_pts2):
     size = len(x_pts)
+    print "x_pts = %d | %d" %(len(x_pts), len(x_pts2))
+    exit(0)
     for i in range(size):
         print "%d/%d %f | %f" % (i,size, x_pts[i], x_pts2[i])
 def get_starting_x_pts(h, rho):
@@ -56,19 +58,19 @@ def get_starting_x_pts(h, rho):
     """
     ans = []
     num_x_pts = int(ceil(1/ h))
-    for i in xrange(num_x_pts + 1): # Plus one so that we also get the very last end point
+    for i in xrange(num_x_pts + 1): # Plus one to include the very last x-point.
         x = i * h
         new_val = u(x, 0, h, rho)
         ans.append(new_val)
     return ans
 
-def get_func_x_pts(h, rho):
+def get_func_x_pts(h):
     """ Gets the points as represented by the function f(x)
         h - x spacing being used
     """
     ans = []
     num_x_pts = int(ceil(1/h))
-    for i in xrange(num_x_pts + 1): # Plus one so that we also get the very last end point on line
+    for i in xrange(num_x_pts + 1): # Plus one to include the very last x-point
         x = i * h
         val = f(x)
         ans.append(val)
@@ -76,18 +78,19 @@ def get_func_x_pts(h, rho):
 
 
 
-def move_x_pts_forward(x_pts, t, k, h):
-    num_x_pts = len(x_pts)
+def move_x_pts_forward(prev_x_pts, curr_x_pts, t, k, h):
+    num_x_pts = len(curr_x_pts)
+    rho = (h/k) ** 2
     ans = []
-    for i in range(num_x_pts):
-        # The First and Last Point are always
-        # Fixed.
-        """if i == 0  or i == num_x_pts - 1:
+    for i in xrange(num_x_pts):
+        if  i == 0 or i == num_x_pts - 1: # First/Last Points are fixed and always at 0.
             ans.append(0)
-            continue"""
-        curr_x = i * h
-        new_x = u_forward(curr_x, t, k, h)
-        ans.append(new_x)
+            continue
+        #    We apply/use the formula for u(x,t+k) which lets us move forward in time.
+        #    The formula is :
+        #        u(x,t+k) = rho * [u(x+h,t) + u(x-h,t)] + 2(1-p)*u(x,t) - u(x,t-k)
+        new_val = rho * (curr_x_pts[i+1] + curr_x_pts[i-1]) + 2*(1-rho)*curr_x_pts[i] - prev_x_pts[i]
+        ans.append(new_val)
     return ans
 
 def plot_x_pts(y_points, h, num):
@@ -112,14 +115,15 @@ def simulate(h, k, run_time, p):
     pts_array = []
     rho = (h/k) ** 2
     initial_x_pts = get_starting_x_pts(h, rho)
-
+    prev_x_pts = get_func_x_pts(h)
     pts_array.append(initial_x_pts)
 
     for i in range(num_steps_forward):
         curr_x_pts = pts_array[i]
         curr_time = i * k
-        new_x_pts = move_x_pts_forward(curr_x_pts, curr_time, k, h)
+        new_x_pts = move_x_pts_forward(prev_x_pts,curr_x_pts, curr_time, k, h)
         pts_array.append(new_x_pts)
+        prev_x_pts = curr_x_pts
     return pts_array
 
 def do_all_plots(points, h):
