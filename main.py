@@ -150,7 +150,7 @@ def do_all_plots(points, h, graph_rate):
         counter += 1
 
 def do_main(h,k,run_time,graph_rate):
-    pts_array = simulate(h,k,run_time,graph_rate)
+    pts_array = simulate(h,k,run_time)
     print "We have this many steps : %d " % len(pts_array)
     print_two_x_pts(pts_array[0], pts_array[0])
     print "We have this many steps : %d " % len(pts_array)
@@ -208,7 +208,7 @@ def main():
             usage()
             exit(-1)
         else:
-            do_main(h,k,total_time,graph_rate)
+            do_main(float(h),float(k),float(total_time),float(graph_rate))
 
 
 if __name__ == '__main__':
