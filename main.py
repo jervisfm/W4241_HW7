@@ -1,4 +1,6 @@
 from math import ceil
+import matplotlib.pyplot as plt
+from matplotlib.pyplot import figure
 
 __author__ = 'Jervis Muindi'
 
@@ -9,7 +11,7 @@ def f(x):
     elif 0.5 <= x <= 1.0:
         return 1 - x
     else:
-        #print "Error: undefined input %f" % x
+        print "Error: undefined input %f" % x
         return 0
 
 
@@ -25,8 +27,16 @@ def u_forward(x, t, k, h):
      h - the delta in x-pts (i.e. the x-spacing in use).
     """
     rho = (k/h)**2
-    print "curr x = %f" %x
-    print "------"
+    #print "curr x = %f" %x
+    #print "------"
+
+    tx = x-h
+    tk = t
+    if tx - tk < 0:
+        print "x = %f"  % x
+        print "h = %f" % h
+        print "t = %f" % t
+
     return rho * (u(x - h, t) + u(x + h, t)) + 2 * (1 - rho) * u(x, t) - u(x, t - k)
 
 def print_x_pts(x_pts):
@@ -66,6 +76,24 @@ def move_x_pts_forward(x_pts, t, k, h):
         ans.append(new_x)
     return ans
 
+def plot_x_pts(y_points, h):
+
+    size = len(y_pts)
+    x_points = []
+    for i in range(size):
+        val = i * h
+        x_points.append(val)
+
+    x_points = []
+    y_points = []
+
+    fig = figure()
+    fig.suptitle('Visualizing X-Line', fontsize=14, fontweight='bold')
+    plt.xlabel('X')
+    plt.ylabel('U')
+    plt.plot(x_points, y_points, 'ro')
+    plt.show()
+    fig.savefig('graph.png')
 
 def simulate(h, k, run_time, p):
     rho = k * k / h * h
