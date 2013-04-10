@@ -2,7 +2,10 @@ from math import ceil
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
 
+
+
 __author__ = 'Jervis Muindi'
+# Date: April 2013
 
 
 def f(x):
@@ -116,6 +119,7 @@ def simulate(h, k, run_time, p):
     rho = (h/k) ** 2
     initial_x_pts = get_starting_x_pts(h, rho)
     prev_x_pts = get_func_x_pts(h)
+
     pts_array.append(initial_x_pts)
 
     for i in range(num_steps_forward):
@@ -124,6 +128,7 @@ def simulate(h, k, run_time, p):
         new_x_pts = move_x_pts_forward(prev_x_pts,curr_x_pts, curr_time, k, h)
         pts_array.append(new_x_pts)
         prev_x_pts = curr_x_pts
+
     return pts_array
 
 def do_all_plots(points, h):
@@ -140,7 +145,7 @@ def test():
     p = 10
     pts_array = simulate(h,k,run_time,p)
     print "We have this many steps : %d " % len(pts_array)
-    print_two_x_pts(pts_array[0], pts_array[1])
+    print_two_x_pts(pts_array[0], pts_array[0])
     print "We have this many steps : %d " % len(pts_array)
     print "plotting..."
     do_all_plots(pts_array, h)
