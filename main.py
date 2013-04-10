@@ -97,11 +97,6 @@ def move_x_pts_forward(prev_x_pts, curr_x_pts, k, h):
 
         new_val = rho * (curr_x_pts[i+1] + curr_x_pts[i-1]) + 2*(1-rho)*curr_x_pts[i] - prev_x_pts[i]
 
-        # Testing has revealed that this formula is affected by rounding errors which make the result negative.
-        # For the parameters, we're working with (rho = 1; y-value = 0.5), this shouldn't be posssible. So we
-        # fix it by truncating to zero.
-        if new_val < 0:
-            new_val = 0
         ans.append(new_val)
     return ans
 
@@ -118,8 +113,8 @@ def plot_x_pts(y_points, h, fname):
     fig = figure()
     fig.suptitle('Visualizing String', fontsize=14, fontweight='bold')
     plt.xlabel('X - Space')
-    plt.ylabel('U - Height/Magnitude')
-    plt.ylim([0,0.5])
+    plt.ylabel('U - String Displacement')
+    plt.ylim([-0.5,0.5])
     plt.plot(x_points, y_points, 'ro')
     fig.savefig('%s' % fname)
 
@@ -232,8 +227,8 @@ def main():
 
 
 if __name__ == '__main__':
-    """h = k = 10 ** (-2)
+    h = k = 10 ** (-2)
     run_time = 2
     graph_rate = 1
-    do_main(h,k,run_time,graph_rate)"""
-    main()
+    do_main(h,k,run_time,graph_rate)
+    #main()
