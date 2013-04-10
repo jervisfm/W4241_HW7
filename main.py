@@ -24,7 +24,8 @@ def u_forward(x, t, k, h):
      k - the delta in time to go forwards
      h - the delta in x-pts (i.e. the x-spacing in use).
     """
-    rho = k*k / h*h
+    rho = (k/h)**2
+    print "curr x = %f" %x
     return rho * (u(x - h, t) + u(x + h, t)) + 2 * (1 - rho) * u(x, t) - u(x, t - k)
 
 def print_x_pts(x_pts):
@@ -54,9 +55,10 @@ def move_x_pts_forward(x_pts, t, k, h):
     num_x_pts = len(x_pts)
     ans = []
     for i in range(num_x_pts):
-        # Skip the First and Last Point as the ends
-        # are fixed
+        # The First and Last Point are always
+        # Fixed.
         if i == 0  or i == num_x_pts - 1:
+            ans.append(0)
             continue
         curr_x = x_pts[i]
         new_x = u_forward(curr_x, t, k, h)
