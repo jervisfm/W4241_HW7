@@ -15,8 +15,9 @@ def f(x):
         return 0
 
 
-def u(x, k):
-    return 0.5 * (f(x - k) + f(x + k))
+def u(x, k, h):
+    rho = (k/h)**2
+    return rho/2 * (f(x - h) + f(x + h)) +(1-rho) * f(x)
 
 def u_forward(x, t, k, h):
     """
@@ -76,7 +77,7 @@ def move_x_pts_forward(x_pts, t, k, h):
         ans.append(new_x)
     return ans
 
-def plot_x_pts(y_points, h):
+def plot_x_pts(y_points, h, num):
 
     size = len(y_points)
     x_points = []
@@ -88,9 +89,10 @@ def plot_x_pts(y_points, h):
     fig.suptitle('Visualizing X-Line', fontsize=14, fontweight='bold')
     plt.xlabel('X')
     plt.ylabel('U')
+    plt.ylim([0,1])
     plt.plot(x_points, y_points, 'ro')
-    plt.show()
-    fig.savefig('graph.png')
+    #plt.show()
+    fig.savefig('graph%d.png' % num)
 
 def simulate(h, k, run_time, p):
     rho = k * k / h * h
@@ -106,6 +108,13 @@ def simulate(h, k, run_time, p):
         pts_array.append(new_x_pts)
     return pts_array
 
+def do_all_plots(points, h):
+    counter = 0
+    for x_pts in points:
+        print "doing graph # %d" % counter
+        plot_x_pts(x_pts, h, counter)
+        counter += 1
+
 def test():
     print 'hi'
     h = k = 10**(-2)
@@ -114,7 +123,10 @@ def test():
     pts_array = simulate(h,k,run_time,p)
     print "We have this many steps : %d " % len(pts_array)
     print_two_x_pts(pts_array[0], pts_array[1])
-    plot_x_pts(pts_array[0], h)
+    print "We have this many steps : %d " % len(pts_array)
+    print "plotting..."
+    do_all_plots(pts_array, h)
+    print "All plots done"
 
 
 def main():
