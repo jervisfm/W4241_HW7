@@ -84,9 +84,6 @@ def plot_x_pts(y_points, h):
         val = i * h
         x_points.append(val)
 
-    x_points = []
-    y_points = []
-
     fig = figure()
     fig.suptitle('Visualizing X-Line', fontsize=14, fontweight='bold')
     plt.xlabel('X')
