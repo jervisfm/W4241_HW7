@@ -155,7 +155,7 @@ def do_main(h,k,run_time,graph_rate):
     print_two_x_pts(pts_array[0], pts_array[0])
     print "We have this many steps : %d " % len(pts_array)
     print "plotting..."
-    do_all_plots(pts_array, h)
+    do_all_plots(pts_array, h, graph_rate)
     print "All plots done"
 
 def usage():
