@@ -167,6 +167,7 @@ def usage():
     print '     t-width: delta in time to be applied in a single step forward'
     print '     total_time: amount of time be used in simulating the system'
     print '     graph_rate: A graph should be drawn/plotted every "graph_rate" steps'
+    print '\nExample: python main.py 0.01 0.01 2 10\n'
     print 'Note: 1) All input values should be positive numeric values. '
     print '      2) Graphing ability is dependent on MatplotLib being installed'
 
