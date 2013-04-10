@@ -9,7 +9,7 @@ def f(x):
     elif 0.5 <= x <= 1.0:
         return 1 - x
     else:
-        print "Error: undefined input %f" % x
+        #print "Error: undefined input %f" % x
         return 0
 
 
@@ -26,6 +26,7 @@ def u_forward(x, t, k, h):
     """
     rho = (k/h)**2
     print "curr x = %f" %x
+    print "------"
     return rho * (u(x - h, t) + u(x + h, t)) + 2 * (1 - rho) * u(x, t) - u(x, t - k)
 
 def print_x_pts(x_pts):
@@ -60,7 +61,7 @@ def move_x_pts_forward(x_pts, t, k, h):
         if i == 0  or i == num_x_pts - 1:
             ans.append(0)
             continue
-        curr_x = x_pts[i]
+        curr_x = i * h
         new_x = u_forward(curr_x, t, k, h)
         ans.append(new_x)
     return ans
