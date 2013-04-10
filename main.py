@@ -1,7 +1,11 @@
 from math import ceil
-import matplotlib.pyplot as plt
-from matplotlib.pyplot import figure
-
+try:
+    import matplotlib.pyplot as plt
+    from matplotlib.pyplot import figure
+    import sys
+except ImportError:
+    print('Dependency MatplotLib Is Missing. Please Install it and try again Exiting ...')
+    exit(-1)
 
 
 __author__ = 'Jervis Muindi'
@@ -21,36 +25,23 @@ def f(x):
 def u(x, k, h, rho):
     return rho/2 * (f(x - h) + f(x + h)) + (1 - rho) * f(x)
 
-def u_forward(x, t, k, h):
-    """
-     Let us move forward in time
-     x - the current x point
-     t - the current time
-     k - the delta in time to go forwards
-     h - the delta in x-pts (i.e. the x-spacing in use).
-    """
-    rho = (k/h)**2
-    #print "INIT rho  = %f" %rho
-    #print "------"
-
-    tx = x-h
-    tk = t
-    if tx - tk < 0:
-        print "x = %f"  % x
-        print "h = %f" % h
-        print "t = %f" % t
-
-    return rho * (u(x - h, t, h, rho) + u(x + h, t, h, rho)) + 2 * (1 - rho) * u(x, t, h, rho) - u(x, t - k, h, rho)
 
 def print_x_pts(x_pts):
+    """
+        Debug method.
+        Outputs all values in array.
+    """
     size = len(x_pts)
     for i in range(size):
         print "%d/%d %f" % (i,size, x_pts[i])
 
 def print_two_x_pts(x_pts, x_pts2):
+    """
+        Debug method.
+        Outputs all points in two arrays side by side.
+    """
     size = len(x_pts)
     print "x_pts = %d | %d" %(len(x_pts), len(x_pts2))
-
     for i in range(size):
         print "%d/%d %f | %f" % (i,size, x_pts[i], x_pts2[i])
 def get_starting_x_pts(h, rho):
@@ -81,7 +72,14 @@ def get_func_x_pts(h):
 
 
 
-def move_x_pts_forward(prev_x_pts, curr_x_pts, t, k, h):
+def move_x_pts_forward(prev_x_pts, curr_x_pts, k, h):
+    """
+        Moves forward from the current line to the next one in time.
+        prev_x_pts - all the values at the prior time step
+        curr_x_pts - all the values at the current time
+        k - the delta/amount in time to go forwards by
+        h - the delta in x-pts (i.e. the x-spacing value).
+    """
     num_x_pts = len(curr_x_pts)
     rho = (h/k) ** 2
     ans = []
@@ -97,7 +95,9 @@ def move_x_pts_forward(prev_x_pts, curr_x_pts, t, k, h):
     return ans
 
 def plot_x_pts(y_points, h, num):
-
+    """
+        Plots the given Points and saves it to a file called 'graph.png' appended with the given 'num' value.
+    """
     size = len(y_points)
     x_points = []
     for i in range(size):
@@ -113,7 +113,15 @@ def plot_x_pts(y_points, h, num):
     #plt.show()
     fig.savefig('graph%d.png' % num)
 
-def simulate(h, k, run_time, p):
+def simulate(h, k, run_time):
+    """
+        Solves the PDE for a vibrating string by using the explicit method.
+        It returns all the y-values of the string throughout duration specified.
+
+        run_time - For How Long we are supposed simulate the string motion. It should be an integer > 0.
+        h - the delta in x-points (i.e. the x-point spacing) to be used.
+        k - the delta in time. (i.e. how much we go ahead in time in one step).
+    """
     num_steps_forward = int(ceil(run_time / k))
     pts_array = []
     rho = (h/k) ** 2
@@ -124,25 +132,21 @@ def simulate(h, k, run_time, p):
 
     for i in range(num_steps_forward):
         curr_x_pts = pts_array[i]
-        curr_time = i * k
-        new_x_pts = move_x_pts_forward(prev_x_pts,curr_x_pts, curr_time, k, h)
+        new_x_pts = move_x_pts_forward(prev_x_pts,curr_x_pts, k, h)
         pts_array.append(new_x_pts)
         prev_x_pts = curr_x_pts
 
     return pts_array
 
-def do_all_plots(points, h):
+def do_all_plots(points, h, graph_rate):
     counter = 0
     for x_pts in points:
-        print "doing graph # %d" % counter
-        plot_x_pts(x_pts, h, counter)
+        if counter % graph_rate == 0:
+            print "Plotting graph # %d" % counter
+            plot_x_pts(x_pts, h, counter)
         counter += 1
 
-def test():
-    print 'hi'
-    h = k = 10**(-2)
-    run_time = 2
-    p = 10
+def do_main(h,k,run_time,graph_rate):
     pts_array = simulate(h,k,run_time,p)
     print "We have this many steps : %d " % len(pts_array)
     print_two_x_pts(pts_array[0], pts_array[0])
@@ -151,10 +155,56 @@ def test():
     do_all_plots(pts_array, h)
     print "All plots done"
 
+def usage():
+    print '**************'
+    print 'Partial ODE solver and grapher for the model problem of a vibrating string: '
+    print 'Usage: '
+    print 'python main.py [x-width] [t-width] [total_time] [graph_rate] '
+    print '     x-width : amount of x-spacing between points'
+    print '     t-width: delta in time to be applied in a single step forward'
+    print '     total_time: amount of time be used in simulating the system'
+    print '     graph_rate: A graph should be drawn/plotted every "graph_rate" steps'
+    print 'Note: 1) All input values should be positive numeric values. '
+    print '      2) Graphing ability is dependent on MatplotLib being installed'
+
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+
+def valid_inputs(h,k,total_time, graph_rate):
+    if (not is_number(h) or h < 0):
+        'h value must be a positive number : %s' % str(h)
+        return False
+    if (not is_number(k) or k < 0):
+        'k value must be a positive number: %s' % str(k)
+        return False
+    if (not is_number(total_time) or total_time < 0):
+        'Time T must be a positive number: %s' % str(total_time)
+        return False
+    if (not is_number(graph_rate) or graph_rate < 0) :
+        'Graph Rate p must be a positive number: %s' % graph_rate
+        return False
+    return True
 
 def main():
-    test()
-
+    arg_count = len(sys.argv) - 1
+    if arg_count != 4:
+        usage()
+    else:
+        h = sys.argv[1]
+        k = sys.argv[2]
+        total_time = sys.argv[3]
+        graph_rate = sys.argv[3]
+        if not valid_inputs(h,k,total_time,graph_rate):
+            print 'Invalid Inputs detected'
+            print '************************'
+            usage()
+            exit(-1)
+        else:
+            do_main(h,k,total_time,graph_rate)
 
 
 if __name__ == '__main__':
