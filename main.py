@@ -78,7 +78,7 @@ def move_x_pts_forward(x_pts, t, k, h):
 
 def plot_x_pts(y_points, h):
 
-    size = len(y_pts)
+    size = len(y_points)
     x_points = []
     for i in range(size):
         val = i * h
@@ -117,6 +117,7 @@ def test():
     pts_array = simulate(h,k,run_time,p)
     print "We have this many steps : %d " % len(pts_array)
     print_two_x_pts(pts_array[0], pts_array[1])
+    plot_x_pts(pts_array[0], h)
 
 
 def main():
