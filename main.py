@@ -227,8 +227,8 @@ def main():
 
 
 if __name__ == '__main__':
-    h = k = 10 ** (-2)
+    """h = k = 10 ** (-2)
     run_time = 2
     graph_rate = 1
-    do_main(h,k,run_time,graph_rate)
-    #main()
+    do_main(h,k,run_time,graph_rate)"""
+    main()
